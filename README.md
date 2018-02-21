@@ -2,7 +2,7 @@
 
 This is a minimalist python software to display departing buses on given bus stops with raspberry pi connected to Nokia 5510 LCD.
 
-[Public transportation LCD display](doc/img1.jpg)
+![Public transportation LCD display](doc/img1.jpg)
 
 ## Installation
 
@@ -37,6 +37,6 @@ BUS_STOP_CODES = [
 
 ## Pin setup
 
-[Pin setup 1](doc/img2.jpg)
-[Pin setup 2](doc/img3.jpg)
+![Pin setup 1](doc/img2.jpg)
+![Pin setup 2](doc/img3.jpg)
 

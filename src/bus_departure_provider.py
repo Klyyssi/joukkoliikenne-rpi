@@ -24,8 +24,3 @@ class BusDepartureProvider():
     @abstractmethod
     def formatDepartures(departures):
         pass
-
-    """ Returns a list of departures where departures are sorted by "time" """
-    @abstractmethod
-    def sortDeparturesAscendingByTime(departures):
-        pass

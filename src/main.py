@@ -5,47 +5,33 @@ Created on Mon Dec 11 21:17:11 2017
 @author: markus
 """
 
-import httplib
-import json
+
 from nokia_lcd import NokiaLCD
-from config import HOST, PASS, USER, API_CALL_INTERVAL_SECONDS, BUS_STOP_CODES
+from config import API_CALL_INTERVAL_SECONDS, BUS_STOP_CODES, PROVIDER
+from tkl_provider import TKLProvider
+from hsl_provider import HSLProvider
 import time
 
 lcd = NokiaLCD()
+provider = HSLProvider()
 
-def apiCall(code):
-    h = httplib.HTTPConnection(HOST)
-    headers = {"User-Agent": "Raspberry-Pi joukkoliikenne", "Accept": "application/json"}
-    h.request("GET", "/prod/?request=stop&code=" + code + "&user=" + USER + "&pass=" + PASS, headers=headers)
-    r = h.getresponse()
-    print r.status, r.reason
-    data = r.read()
-    h.close()
-    return json.loads(data)
-
-def getDepartures(stopCodes):
-    return reduce(list.__add__, map(lambda stopCode: filterDepartures(apiCall(stopCode[0])[0]["departures"], stopCode[2]), stopCodes))
-
-def filterDepartures(departures, lineNumbers):
-    return filter(lambda d: d["code"] in lineNumbers, departures)
-
-def formatDepartures(departures):
-    return map(lambda d: { "hours": d["time"][:2], "minutes": d["time"][2:4], "line": d["code"], "time": int(d["time"][:2]) * 60 + int(d["time"][2:4]) }, departures)
+if (PROVIDER == "TKL"):
+    provider = TKLProvider()
 
 def sortDeparturesAscendingByTime(departures):
     return sorted(departures, key=lambda d: int(d["time"]))
-
+    
 def updateDepartures():
     lcd.clear(x1=40, y1=48)
     try:
-        departures = getDepartures(BUS_STOP_CODES)
+        departures = provider.getDepartures(BUS_STOP_CODES)
     except Exception:
         return False
-    departures = formatDepartures(departures)
+    departures = provider.filterDepartures(departures, BUS_STOP_CODES)
+    departures = provider.formatDepartures(departures)
     departures = sortDeparturesAscendingByTime(departures)
-    print departures
     for i,d in enumerate(departures[:7]):
-        lcd.setText(d["line"] + " " + d["hours"] + ":" + d["minutes"], x=0, y= i*7)
+        lcd.setText(d["line"] + " " + str(d["hours"]) + ":" + str(d["minutes"]), x=0, y= i*7)
     return departures
 
 def main():

@@ -1,4 +1,4 @@
-# Tampere public transportation screen
+# Helsinki & Tampere public transportation display
 
 This is a minimalist python software to display departing buses on given bus stops with raspberry pi connected to Nokia 5510 LCD.
 
@@ -7,17 +7,26 @@ This is a minimalist python software to display departing buses on given bus sto
 ## Installation
 
 1. Clone this repository
-2. [Request access to Tampere Public Transport API](http://developer.publictransport.tampere.fi/pages/en/account-request.php)
+2. [Request access to Tampere Public Transport API](http://developer.publictransport.tampere.fi/pages/en/account-request.php). If you use HSL, skip this step.
 3. Copy & paste into `src/config.py`:
 ```python
-HOST = "api.publictransport.tampere.fi"
-USER = "YOUR-API-USERNAME"
-PASS = "YOUR-API-PASSWORD"
+# Provider is "HSL" or "TKL"
+PROVIDER = "TKL"
 
+# Only needed if PROVIDER == "TKL"
+TKL_USER = "YOUR-API-USERNAME"
+# Only needed if PROVIDER == "TKL"
+TKL_PASS = "YOUR-API-PASSWORD"
+
+# The interval of calling the public API
 API_CALL_INTERVAL_SECONDS = 20 * 60
+
+# Use whatever bus stop codes and bus line numbers.
+# The codes can be found from API documentation of TKL & HSL.
+# The format is (BusStopCode, BusStopNameWhichIsNotInUseYet, [LineNumbers])
 BUS_STOP_CODES = [
-    ("3607", "Nayt.katu", ["3A"]), # Use whatever bus stop codes & bus line numbers here,
-    ("3601", "Arkk.katu", ["3B"]), # consult public transport API documentation for all codes
+    ("3607", "Nayt.katu", ["3A"]),
+    ("3601", "Arkk.katu", ["3B"]),
 ]
 ```
 4. Install dependencies
